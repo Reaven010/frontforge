@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Clone UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. THEME SETTINGS --- */
+        :root {
+            --bg-body: #131314;       
+            --bg-surface: #1E1F20;    
+            --bg-active: #282A2C;     
+            --text-main: #E3E3E3;     
+            --text-muted: #A0A0A0;    
+            --accent: #444746;        
+            --radius: 16px;           
+            --user-msg-bg: #2b2c2e;   
+        }
+
+        /* --- 2. RESET --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+
+        /* --- 3. LAYOUT --- */
+        .container {
+            display: flex;
+            height: 100vh;
+            padding: 12px;
+            gap: 12px;
+        }
+
+        .panel {
+            background-color: var(--bg-surface);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            min-width: 200px;
+            padding: 20px;
+            display: none;
+        }
+        @media (min-width: 768px) { .sidebar { display: flex; } }
+
+        .menu-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 50px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .menu-item:hover { background-color: var(--bg-active); }
+        .menu-item.active { background-color: #004A77; color: #D3E3FD; }
+
+        /* MAIN CHAT AREA */
+        .main-chat {
+            flex-grow: 1;
+            background-color: var(--bg-body);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Welcome Screen (Centered) */
+        #welcome-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+
+        /* Message List (Scrollable) */
+        #message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        /* Bubbles */
+        .message-row {
+            display: flex;
+            max-width: 80%;
+        }
+        .message-row.user {
+            align-self: flex-end;
+            justify-content: flex-end;
+        }
+        .message-row.bot {
+            align-self: flex-start;
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            padding: 12px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+        .user .bubble {
+            background-color: var(--user-msg-bg);
+            border-radius: 20px 20px 0 20px;
+        }
+        .bot .bubble {
+            background-color: transparent;
+            padding-left: 0;
+        }
+
+        /* INPUT BAR */
+        .input-area {
+            background-color: var(--bg-surface);
+            margin: 0 20px 20px 20px;
+            padding: 5px 10px 5px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 50px;
+        }
+        .input-area:focus-within { background-color: var(--bg-active); }
+
+        #prompt-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+
+        #send-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+        }
+        #send-btn:hover { background-color: #3C4043; }
+
+        /* CODE PANEL */
+        .code-panel {
+            width: 35%;
+            min-width: 350px;
+            background-color: #1E1F20;
+            border: 1px solid var(--accent);
+        }
+        .panel-header {
+            padding: 15px;
+            background-color: var(--bg-active);
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent);
+        }
+        .code-content {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #A8C7FA;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="panel sidebar">
+            <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
+            <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
+            <div class="menu-item" id="btn-chat-1">Project Gemini Layout</div>
+            <div class="menu-item" id="btn-chat-2">React Component Help</div>
+        </div>
+
+        <div class="main-chat">
+            <div class="chat-window" id="scroll-container">
+                
+                <div id="welcome-screen">
+                    <h2 style="font-weight: 500; font-size: 28px; background: linear-gradient(90deg, #4285F4, #9B72CB); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello, User</h2>
+                    <p style="color: var(--text-muted); font-size: 20px;">How can I help you today?</p>
+                </div>
+
+                <div id="message-list"></div>
+            
+            </div>
+            
+            <div class="input-area">
+                <input type="text" id="prompt-input" placeholder="Enter a prompt here..." autocomplete="off">
+                <button id="send-btn">&#10148;</button>
+            </div>
+        </div>
+
+        <div class="panel code-panel">
+            <div class="panel-header" id="code-header">Code Output</div>
+            <div class="code-content" id="code-content">// Code artifacts will appear here...</div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        const historyData = {
+            "btn-chat-1": {
+                code: "<html>...</html>",
+                msgs: [
+                    { role: "user", text: "Can you help me with a layout?" },
+                    { role: "bot", text: "Sure! I can use Flexbox." }
+                ]
+            },
+            "btn-chat-2": {
+                code: "const App = () => <div>Hello</div>",
+                msgs: [
+                    { role: "user", text: "React component example?" },
+                    { role: "bot", text: "Here is a functional component." }
+                ]
+            }
+        };
+
+        // --- ELEMENTS ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const messageList = document.getElementById('message-list');
+        const inputField = document.getElementById('prompt-input');
+        const sendBtn = document.getElementById('send-btn');
+        const scrollContainer = document.getElementById('scroll-container');
+        const codeHeader = document.getElementById('code-header');
+        const codeContent = document.getElementById('code-content');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        // --- FUNCTIONS ---
+
+        function showWelcome() {
+            welcomeScreen.style.display = "block";
+            messageList.innerHTML = ""; // Clear messages
+            codeContent.innerText = "// Code artifacts will appear here...";
+            
+            // Reset Active Class
+            menuItems.forEach(i => i.classList.remove('active'));
+            document.getElementById('btn-new-chat').classList.add('active');
+        }
+
+        function appendMessage(role, text) {
+            // Hide welcome screen immediately
+            welcomeScreen.style.display = "none";
+
+            const row = document.createElement('div');
+            row.classList.add('message-row', role);
+            
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.innerText = text;
+
+            row.appendChild(bubble);
+            messageList.appendChild(row);
+
+            // Auto-scroll
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // 1. Send Button Logic
+        function handleSend() {
+            const text = inputField.value.trim();
+            if (text === "") return;
+
+            // Add User Message
+            appendMessage('user', text);
+            inputField.value = "";
+
+            // Fake Bot Response
+            setTimeout(() => {
+                appendMessage('bot', "I received: " + text);
+                codeContent.innerText = "// Generated code for: " + text + "\nconsole.log('Success');";
+            }, 600);
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+
+        // 2. Sidebar Navigation
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // If New Chat
+                if (this.id === 'btn-new-chat') {
+                    showWelcome();
+                    return;
+                }
+
+                // If History Item
+                const data = historyData[this.id];
+                if (data) {
+                    // Update UI Selection
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Load Data
+                    welcomeScreen.style.display = "none";
+                    messageList.innerHTML = ""; // Clear old
+                    
+                    data.msgs.forEach(msg => appendMessage(msg.role, msg.text));
+                    codeContent.innerText = data.code;
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

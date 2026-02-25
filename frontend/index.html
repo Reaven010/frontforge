@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Clone UI</title>
+    <title>Gemini Clone UI - Complete</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. THEME SETTINGS --- */
+        /* --- 1. THEME SETTINGS (CSS Variables) --- */
         :root {
             --bg-body: #131314;       
             --bg-surface: #1E1F20;    
@@ -16,9 +16,26 @@
             --accent: #444746;        
             --radius: 16px;           
             --user-msg-bg: #2b2c2e;   
+            --code-bg: #1E1F20;
+            --code-text: #A8C7FA;
+            --input-bg: #1E1F20;
         }
 
-        /* --- 2. RESET --- */
+        /* Light Theme Overrides */
+        body.light-theme {
+            --bg-body: #FFFFFF;
+            --bg-surface: #F0F4F9;
+            --bg-active: #D3E3FD;
+            --text-main: #1F1F1F;
+            --text-muted: #5E5E5E;
+            --accent: #E0E0E0;
+            --user-msg-bg: #E8EAED;
+            --code-bg: #F5F5F5;
+            --code-text: #0B57D0;
+            --input-bg: #F0F4F9;
+        }
+
+        /* --- 2. GLOBAL RESET --- */
         body, html {
             margin: 0;
             padding: 0;
@@ -27,9 +44,10 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- 3. LAYOUT --- */
+        /* --- 3. MAIN LAYOUT --- */
         .container {
             display: flex;
             height: 100vh;
@@ -43,16 +61,20 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: background-color 0.3s;
         }
 
-        /* SIDEBAR */
+        /* --- 4. SIDEBAR --- */
         .sidebar {
             width: 260px;
             min-width: 200px;
             padding: 20px;
-            display: none;
+            display: none; /* Hidden on mobile */
+            justify-content: space-between;
         }
         @media (min-width: 768px) { .sidebar { display: flex; } }
+
+        .menu-group { display: flex; flex-direction: column; }
 
         .menu-item {
             padding: 10px 15px;
@@ -61,18 +83,25 @@
             color: var(--text-main);
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .menu-item:hover { background-color: var(--bg-active); }
         .menu-item.active { background-color: #004A77; color: #D3E3FD; }
+        
+        /* Light mode active state adjustment */
+        body.light-theme .menu-item.active { background-color: #C2E7FF; color: #001D35; }
 
-        /* MAIN CHAT AREA */
+        /* --- 5. CHAT AREA --- */
         .main-chat {
             flex-grow: 1;
             background-color: var(--bg-body);
             display: flex;
             flex-direction: column;
             position: relative;
+            transition: background-color 0.3s;
         }
 
         .chat-window {
@@ -84,7 +113,7 @@
             position: relative;
         }
 
-        /* Welcome Screen (Centered) */
+        /* Welcome Screen */
         #welcome-screen {
             position: absolute;
             top: 50%;
@@ -95,7 +124,7 @@
             transition: opacity 0.3s;
         }
 
-        /* Message List (Scrollable) */
+        /* Message Bubbles */
         #message-list {
             display: flex;
             flex-direction: column;
@@ -103,19 +132,9 @@
             padding-bottom: 20px;
         }
 
-        /* Bubbles */
-        .message-row {
-            display: flex;
-            max-width: 80%;
-        }
-        .message-row.user {
-            align-self: flex-end;
-            justify-content: flex-end;
-        }
-        .message-row.bot {
-            align-self: flex-start;
-            justify-content: flex-start;
-        }
+        .message-row { display: flex; max-width: 80%; }
+        .message-row.user { align-self: flex-end; justify-content: flex-end; }
+        .message-row.bot { align-self: flex-start; justify-content: flex-start; }
 
         .bubble {
             padding: 12px 20px;
@@ -126,15 +145,41 @@
         .user .bubble {
             background-color: var(--user-msg-bg);
             border-radius: 20px 20px 0 20px;
+            color: var(--text-main);
         }
         .bot .bubble {
             background-color: transparent;
             padding-left: 0;
+            color: var(--text-main);
         }
 
-        /* INPUT BAR */
+        /* --- 6. INPUT AREA (Fixed for Keyboard) --- */
+        
+        /* NEW: API Key Area */
+        .api-area {
+            background-color: var(--input-bg);
+            margin: 0 20px 10px 20px; /* 10px bottom margin separates it from the prompt box */
+            padding: 8px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        .api-area:focus-within { background-color: var(--bg-active); }
+        
+        #api-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
         .input-area {
-            background-color: var(--bg-surface);
+            background-color: var(--input-bg);
             margin: 0 20px 20px 20px;
             padding: 5px 10px 5px 20px;
             border-radius: 30px;
@@ -142,6 +187,9 @@
             align-items: center;
             justify-content: space-between;
             min-height: 50px;
+            transition: background-color 0.3s;
+            z-index: 10; /* Ensures it sits on top */
+            position: relative;
         }
         .input-area:focus-within { background-color: var(--bg-active); }
 
@@ -163,14 +211,15 @@
             padding: 10px;
             border-radius: 50%;
         }
-        #send-btn:hover { background-color: #3C4043; }
+        #send-btn:hover { background-color: var(--accent); }
 
-        /* CODE PANEL */
+        /* --- 7. CODE PANEL --- */
         .code-panel {
             width: 35%;
             min-width: 350px;
-            background-color: #1E1F20;
+            background-color: var(--code-bg);
             border: 1px solid var(--accent);
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .panel-header {
             padding: 15px;
@@ -178,12 +227,13 @@
             font-size: 14px;
             font-weight: bold;
             border-bottom: 1px solid var(--accent);
+            color: var(--text-main);
         }
         .code-content {
             padding: 20px;
             font-family: 'Courier New', monospace;
             font-size: 14px;
-            color: #A8C7FA;
+            color: var(--code-text);
             white-space: pre-wrap;
             overflow-y: auto;
         }
@@ -194,26 +244,39 @@
     <div class="container">
         
         <div class="panel sidebar">
-            <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
-            <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
-            <div class="menu-item" id="btn-chat-1">Project Gemini Layout</div>
-            <div class="menu-item" id="btn-chat-2">React Component Help</div>
+            <div class="menu-group">
+                <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
+                <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
+                <div class="menu-item" id="chat-v3">v3: Add History</div>
+                <div class="menu-item" id="chat-v2">v2: Theme Toggle</div>
+                <div class="menu-item" id="chat-v1">v1: Initial Layout</div>
+                <div class="menu-item" id="chat-react">React Help</div>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item" id="theme-btn">
+                    <span id="theme-icon">☀</span> 
+                    <span id="theme-text">Light Mode</span>
+                </div>
+            </div>
         </div>
 
         <div class="main-chat">
             <div class="chat-window" id="scroll-container">
-                
                 <div id="welcome-screen">
                     <h2 style="font-weight: 500; font-size: 28px; background: linear-gradient(90deg, #4285F4, #9B72CB); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello, User</h2>
                     <p style="color: var(--text-muted); font-size: 20px;">How can I help you today?</p>
                 </div>
-
                 <div id="message-list"></div>
-            
             </div>
             
+            <div class="api-area">
+                <span style="color: var(--text-muted); font-size: 14px; margin-right: 12px;">🔑</span>
+                <input type="password" id="api-input" placeholder="Enter API Key here..." autocomplete="off">
+            </div>
+
             <div class="input-area">
-                <input type="text" id="prompt-input" placeholder="Enter a prompt here..." autocomplete="off">
+                <input type="text" id="prompt-input" placeholder="Enter a prompt here..." autocomplete="off" autofocus>
                 <button id="send-btn">&#10148;</button>
             </div>
         </div>
@@ -226,50 +289,53 @@
     </div>
 
     <script>
-        // --- DATA ---
+        // --- 1. MOCK DATA ---
         const historyData = {
-            "btn-chat-1": {
-                code: "<html>...</html>",
-                msgs: [
-                    { role: "user", text: "Can you help me with a layout?" },
-                    { role: "bot", text: "Sure! I can use Flexbox." }
-                ]
+            "chat-v3": { 
+                code: "// Version 3: Full History\nconst historyData = { ... };", 
+                msgs: [{role: "user", text: "Show me the history."}, {role: "bot", text: "Here is the history view (v3)."}] 
             },
-            "btn-chat-2": {
-                code: "const App = () => <div>Hello</div>",
-                msgs: [
-                    { role: "user", text: "React component example?" },
-                    { role: "bot", text: "Here is a functional component." }
-                ]
+            "chat-v2": { 
+                code: "/* Version 2: Theme Toggle */\nbody.light-theme { ... }", 
+                msgs: [{role: "user", text: "I need a light mode."}, {role: "bot", text: "I've added the theme toggle button."}] 
+            },
+            "chat-v1": { 
+                code: "\n<div class='container'>...</div>", 
+                msgs: [{role: "user", text: "Build the layout."}, {role: "bot", text: "Here is the basic Flexbox layout."}] 
+            },
+            "chat-react": { 
+                code: "const App = () => <div>Hello React</div>;", 
+                msgs: [{role: "user", text: "React component help?"}, {role: "bot", text: "Here is a functional component."}] 
             }
         };
 
-        // --- ELEMENTS ---
+        // --- 2. ELEMENTS ---
         const welcomeScreen = document.getElementById('welcome-screen');
         const messageList = document.getElementById('message-list');
         const inputField = document.getElementById('prompt-input');
         const sendBtn = document.getElementById('send-btn');
         const scrollContainer = document.getElementById('scroll-container');
-        const codeHeader = document.getElementById('code-header');
         const codeContent = document.getElementById('code-content');
-        const menuItems = document.querySelectorAll('.menu-item');
+        const menuItems = document.querySelectorAll('.menu-group .menu-item:not(#theme-btn)');
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        
+        // Grab the new API input
+        const apiInput = document.getElementById('api-input');
 
-        // --- FUNCTIONS ---
+        // --- 3. FUNCTIONS ---
 
         function showWelcome() {
             welcomeScreen.style.display = "block";
-            messageList.innerHTML = ""; // Clear messages
+            messageList.innerHTML = ""; 
             codeContent.innerText = "// Code artifacts will appear here...";
-            
-            // Reset Active Class
             menuItems.forEach(i => i.classList.remove('active'));
             document.getElementById('btn-new-chat').classList.add('active');
         }
 
         function appendMessage(role, text) {
-            // Hide welcome screen immediately
             welcomeScreen.style.display = "none";
-
             const row = document.createElement('div');
             row.classList.add('message-row', role);
             
@@ -279,54 +345,67 @@
 
             row.appendChild(bubble);
             messageList.appendChild(row);
-
-            // Auto-scroll
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
 
-        // --- EVENT LISTENERS ---
-
-        // 1. Send Button Logic
         function handleSend() {
             const text = inputField.value.trim();
+            const apiKey = apiInput.value.trim(); // You can now use the API key here
+            
             if (text === "") return;
 
-            // Add User Message
+            // Optional: Alert the user if they try to send without an API key
+            // if (apiKey === "") {
+            //     alert("Please enter an API key first.");
+            //     return;
+            // }
+
             appendMessage('user', text);
             inputField.value = "";
+            inputField.focus(); // Keep focus active
 
-            // Fake Bot Response
             setTimeout(() => {
-                appendMessage('bot', "I received: " + text);
+                appendMessage('bot', "I received: " + text + "\n(Using API Key ending in: " + apiKey.slice(-4) + ")");
                 codeContent.innerText = "// Generated code for: " + text + "\nconsole.log('Success');";
             }, 600);
         }
 
+        // --- 4. LISTENERS ---
+        
         sendBtn.addEventListener('click', handleSend);
-        inputField.addEventListener('keypress', (e) => {
+        
+        // Keydown is better for handling stuck keys or rapid typing
+        inputField.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleSend();
         });
 
-        // 2. Sidebar Navigation
+        // Theme Toggle
+        let isLightMode = false;
+        themeBtn.addEventListener('click', () => {
+            isLightMode = !isLightMode;
+            document.body.classList.toggle('light-theme');
+            if (isLightMode) {
+                themeIcon.innerText = "☾"; 
+                themeText.innerText = "Dark Mode";
+            } else {
+                themeIcon.innerText = "☀"; 
+                themeText.innerText = "Light Mode";
+            }
+        });
+
+        // Sidebar Navigation
         menuItems.forEach(item => {
             item.addEventListener('click', function() {
-                // If New Chat
                 if (this.id === 'btn-new-chat') {
                     showWelcome();
                     return;
                 }
-
-                // If History Item
                 const data = historyData[this.id];
                 if (data) {
-                    // Update UI Selection
                     menuItems.forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
-
-                    // Load Data
                     welcomeScreen.style.display = "none";
-                    messageList.innerHTML = ""; // Clear old
-                    
+                    messageList.innerHTML = ""; 
                     data.msgs.forEach(msg => appendMessage(msg.role, msg.text));
                     codeContent.innerText = data.code;
                 }
@@ -334,6 +413,5 @@
         });
 
     </script>
-
 </body>
 </html>

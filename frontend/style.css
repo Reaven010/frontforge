@@ -1,0 +1,248 @@
+        /* --- 1. THEME SETTINGS (CSS Variables) --- */
+        :root {
+            --bg-body: #131314;       
+            --bg-surface: #1E1F20;    
+            --bg-active: #282A2C;     
+            --text-main: #E3E3E3;     
+            --text-muted: #A0A0A0;    
+            --accent: #444746;        
+            --radius: 16px;           
+            --user-msg-bg: #2b2c2e;   
+            --code-bg: #1E1F20;
+            --code-text: #A8C7FA;
+            --input-bg: #1E1F20;
+        }
+
+        /* Light Theme Overrides */
+        body.light-theme {
+            --bg-body: #FFFFFF;
+            --bg-surface: #F0F4F9;
+            --bg-active: #D3E3FD;
+            --text-main: #1F1F1F;
+            --text-muted: #5E5E5E;
+            --accent: #E0E0E0;
+            --user-msg-bg: #E8EAED;
+            --code-bg: #F5F5F5;
+            --code-text: #0B57D0;
+            --input-bg: #F0F4F9;
+        }
+
+        /* --- 2. GLOBAL RESET --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- 3. MAIN LAYOUT --- */
+        .container {
+            display: flex;
+            height: 100vh;
+            padding: 12px;
+            gap: 12px;
+        }
+
+        .panel {
+            background-color: var(--bg-surface);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+
+        /* --- 4. SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            min-width: 200px;
+            padding: 20px;
+            display: none; /* Hidden on mobile */
+            justify-content: space-between;
+        }
+        @media (min-width: 768px) { .sidebar { display: flex; } }
+
+        .menu-group { display: flex; flex-direction: column; }
+
+        .menu-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 50px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .menu-item:hover { background-color: var(--bg-active); }
+        .menu-item.active { background-color: #004A77; color: #D3E3FD; }
+        
+        /* Light mode active state adjustment */
+        body.light-theme .menu-item.active { background-color: #C2E7FF; color: #001D35; }
+
+        /* --- 5. CHAT AREA --- */
+        .main-chat {
+            flex-grow: 1;
+            background-color: var(--bg-body);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Welcome Screen */
+        #welcome-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+
+        /* Message Bubbles */
+        #message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        .message-row { display: flex; max-width: 80%; }
+        .message-row.user { align-self: flex-end; justify-content: flex-end; }
+        .message-row.bot { align-self: flex-start; justify-content: flex-start; }
+
+        .bubble {
+            padding: 12px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+        .user .bubble {
+            background-color: var(--user-msg-bg);
+            border-radius: 20px 20px 0 20px;
+            color: var(--text-main);
+        }
+        .bot .bubble {
+            background-color: transparent;
+            padding-left: 0;
+            color: var(--text-main);
+        }
+
+        /* --- 6. INPUT AREA (Fixed for Keyboard) --- */
+        
+        /* NEW: API Key Area */
+        .api-area {
+            background-color: var(--input-bg);
+            margin: 0 20px 10px 20px; /* 10px bottom margin separates it from the prompt box */
+            padding: 8px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        .api-area:focus-within { background-color: var(--bg-active); }
+        
+        #api-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .input-area {
+            background-color: var(--input-bg);
+            margin: 0 20px 20px 20px;
+            padding: 5px 10px 5px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 50px;
+            transition: background-color 0.3s;
+            z-index: 10; /* Ensures it sits on top */
+            position: relative;
+        }
+        .input-area:focus-within { background-color: var(--bg-active); }
+
+        #prompt-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+
+        #send-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+        }
+        #send-btn:hover { background-color: var(--accent); }
+
+        /* --- 7. CODE PANEL --- */
+        .code-panel {
+            width: 35%;
+            min-width: 350px;
+            background-color: var(--code-bg);
+            border: 1px solid var(--accent);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .panel-header {
+            padding: 15px;
+            background-color: var(--bg-active);
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent);
+            color: var(--text-main);
+        }
+        .code-content {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--code-text);
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+        }
+
+        .tab-btn:hover {
+            background-color: var(--bg-active);
+        }

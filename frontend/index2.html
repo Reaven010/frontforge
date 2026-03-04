@@ -14,10 +14,18 @@ body{
     justify-content:center;
     align-items:center;
     font-family:Arial, sans-serif;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-    url("https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1920");
     background-size:cover;
     background-position:center;
+}
+
+#bg-video{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
 }
 
 /* ================= LOGIN CARD ================= */
@@ -129,7 +137,9 @@ body{
 </head>
 
 <body>
-
+<video autoplay muted loop id="bg-video">
+    <source src="./background.mp4" type="video/mp4">
+</video>
 <div class="login-box">
 
     <h2>Welcome to our website</h2>

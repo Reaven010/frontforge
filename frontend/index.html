@@ -1,65 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrontForge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Interface</title>
+
+<style>
+/* ================= BACKGROUND ================= */
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial, sans-serif;
+    background-size:cover;
+    background-position:center;
+}
+
+#bg-video{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+/* ================= LOGIN CARD ================= */
+.login-box{
+    width:320px;
+    padding:40px;
+    text-align:center;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    box-shadow:0 0 20px rgba(0,0,0,0.6);
+    color:white;
+}
+
+/* ================= WELCOME HEADING ================= */
+.login-box h2{
+    margin-bottom:25px;
+    font-size:26px;
+    overflow:hidden;
+    white-space:nowrap;
+    border-right:3px solid white;
+    width:0;
+    display:inline-block;
+    
+    /* Gradient text */
+    background:linear-gradient(90deg, orange, red, orange);
+    background-size:200%;
+    -webkit-background-clip:text;
+    color:transparent;
+
+    animation:
+        typing 3s steps(30) forwards,
+        blink 0.7s infinite,
+        gradientMove 3s linear infinite,
+        glow 2s ease-in-out infinite alternate;
+}
+
+/* ================= INPUTS ================= */
+.input-box{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    outline:none;
+    border-radius:6px;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    /* Ensure padding doesn't increase width */
+    box-sizing: border-box; 
+}
+
+.input-box::placeholder{
+    color:#ddd;
+}
+
+/* ================= BUTTON ================= */
+.login-btn{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    border:none;
+    border-radius:6px;
+    background:#0095f6;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.login-btn:hover{
+    background:#0077cc;
+}
+
+/* ================= LINKS ================= */
+.forgot{
+    margin-top:15px;
+    font-size:14px;
+    color:#ccc;
+    cursor:pointer;
+}
+
+.signup{
+    margin-top:20px;
+    font-size:14px;
+}
+
+.signup span{
+    color:#0095f6;
+    cursor:pointer;
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes typing{
+    from{ width:0 }
+    to{ width:100% }
+}
+@keyframes blink{
+    50%{ border-color:transparent }
+}
+@keyframes gradientMove{
+    from{ background-position:0% }
+    to{ background-position:200% }
+}
+@keyframes glow{
+    from{ text-shadow:0 0 5px orange; }
+    to{ text-shadow:0 0 25px red; }
+}
+</style>
 </head>
+
 <body>
+<video autoplay muted loop id="bg-video">
+    <source src="./background.mp4" type="video/mp4">
+</video>
+<div class="login-box">
 
-    <div class="container">
-        
-        <div class="panel sidebar">
-            <div class="menu-group">
-                <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
-                <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
-                <div class="menu-item" id="chat-v3">v3: Add History</div>
-                <div class="menu-item" id="chat-v2">v2: Theme Toggle</div>
-                <div class="menu-item" id="chat-v1">v1: Initial Layout</div>
-                <div class="menu-item" id="chat-react">React Help</div>
-            </div>
-            
-            <div class="menu-group">
-                <div class="menu-item" id="theme-btn">
-                    <span id="theme-icon">☀</span> 
-                    <span id="theme-text">Light Mode</span>
-                </div>
-            </div>
-        </div>
+    <h2>Welcome to our website</h2>
 
-        <div class="main-chat">
-            <div class="chat-window" id="scroll-container">
-                <div id="welcome-screen">
-                    <h2 style="font-weight: 500; font-size: 28px; background: linear-gradient(90deg, #4285F4, #9B72CB); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello, User</h2>
-                    <p style="color: var(--text-muted); font-size: 20px;">How can I help you today?</p>
-                </div>
-                <div id="message-list"></div>
-            </div>
-            
-            <div class="api-area">
-                <span style="color: var(--text-muted); font-size: 14px; margin-right: 12px;">🔑</span>
-                <input type="password" id="api-input" placeholder="Enter API Key here..." autocomplete="off">
-            </div>
+    <input type="text" class="input-box" placeholder="Phone number, username, or email">
+    <input type="password" class="input-box" placeholder="Password">
 
-            <div class="input-area">
-                <input type="text" id="prompt-input" placeholder="Enter a prompt here..." autocomplete="off" autofocus>
-                <button id="send-btn">&#10148;</button>
-            </div>
-        </div>
+    <button class="login-btn" onclick="redirectToPage()">Log in</button>
 
-        <div class="panel code-panel">
-    <div class="panel-header">
-        <button class="tab-btn active" onclick="switchTab('html')">HTML</button>
-        <button class="tab-btn" onclick="switchTab('css')">CSS</button>
-        <button class="tab-btn" onclick="switchTab('js')">JS</button>
+    <div class="forgot">Forgot password?</div>
+
+    <div class="signup">
+        Don't have an account? <span>Sign up</span>
     </div>
-    <div class="code-content" id="code-content">// Code artifacts will appear here...</div>
+
 </div>
 
-    </div>
+<script>
+    function redirectToPage() {
+        // Change 'dashboard.html' to the name of your next page
+        window.location.href = "index_main.html";
+    }
+</script>
 
-    <script src="indexscript.js"></script>
 </body>
 </html>

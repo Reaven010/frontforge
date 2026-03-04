@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrontForge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="panel sidebar">
+            <div class="menu-group">
+                <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
+                <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
+                <div class="menu-item" id="chat-v3">v3: Add History</div>
+                <div class="menu-item" id="chat-v2">v2: Theme Toggle</div>
+                <div class="menu-item" id="chat-v1">v1: Initial Layout</div>
+                <div class="menu-item" id="chat-react">React Help</div>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item" id="theme-btn">
+                    <span id="theme-icon">☀</span> 
+                    <span id="theme-text">Light Mode</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-chat">
+            <div class="chat-window" id="scroll-container">
+                <div id="welcome-screen">
+                    <h2 style="font-weight: 500; font-size: 28px; background: linear-gradient(90deg, #4285F4, #9B72CB); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello, User</h2>
+                    <p style="color: var(--text-muted); font-size: 20px;">How can I help you today?</p>
+                </div>
+                <div id="message-list"></div>
+            </div>
+            
+            <div class="api-area">
+                <span style="color: var(--text-muted); font-size: 14px; margin-right: 12px;">🔑</span>
+                <input type="password" id="api-input" placeholder="Enter API Key here..." autocomplete="off">
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="prompt-input" placeholder="Enter a prompt here..." autocomplete="off" autofocus>
+                <button id="send-btn">&#10148;</button>
+            </div>
+        </div>
+
+        <div class="panel code-panel">
+    <div class="panel-header">
+        <button class="tab-btn active" onclick="switchTab('html')">HTML</button>
+        <button class="tab-btn" onclick="switchTab('css')">CSS</button>
+        <button class="tab-btn" onclick="switchTab('js')">JS</button>
+    </div>
+    <div class="code-content" id="code-content">// Code artifacts will appear here...</div>
+</div>
+
+    </div>
+
+    <script src="indexscript.js"></script>
+</body>
+</html>

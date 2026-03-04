@@ -83,7 +83,7 @@ async function handleSend() {
     codeContent.innerText = "// Generating...";
 
     try {
-        const response = await fetch("http://localhost:5000/generate", {
+        const response = await fetch("https://frontforge.onrender.com", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

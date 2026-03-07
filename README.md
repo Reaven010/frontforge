@@ -148,6 +148,7 @@ Build a responsive login page with gradient background and glassmorphism card
 - Support React / Next.js generation
 - Save chat history
 - Multiple AI model support
+- 
 ---
 
 ## 👨‍💻 Author
@@ -157,5 +158,6 @@ Sayujya Tiwari
 GitHub: https://github.com/Reaven010
 
 Naman Joshi
+
 Github: https://github.com/ELTcoder4
 

@@ -82,7 +82,7 @@ Request body:
   "apiKey": "your_api_key"
 }
 ```
-** Response : **
+**Response :**
 ```
 HTML:
 <generated html>
@@ -97,23 +97,23 @@ JS:
 ---
 
 ## Installation
-** 1. Clone the repository **
+1. **Clone the repository**
 ```bash
 git clone https://github.com/yourusername/frontforge.git
 cd frontforge
 ```
-** 2. Install backend dependencies **
+2. **Install backend dependencies**
 ```bash
 cd backend
 npm install
 ```
-** 3. Start the server **
+3. **Start the server**
 ```bash
 npm start
 ```
 Server will run on:
 ```http://localhost:5000```
-** 4. Run the frontend **
+4. **Run the frontend**
 Open:
 ```index.html```
 
@@ -129,9 +129,9 @@ Open:
 
 The AI will generate:
 
--HTML
--CSS
--JavaScript
+- HTML
+- CSS
+- JavaScript
 
 You can switch between code tabs in the right panel.
 ---
@@ -142,9 +142,9 @@ Build a responsive login page with gradient background and glassmorphism card
 ---
 ##Future Improvements
 
--Live website preview
--Download generated code as ZIP
--Deploy generated website
--Support React / Next.js generation
--Save chat history
--Multiple AI model support
+- Live website preview
+- Download generated code as ZIP
+- Deploy generated website
+- Support React / Next.js generation
+- Save chat history
+- Multiple AI model support

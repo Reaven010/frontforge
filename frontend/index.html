@@ -162,7 +162,7 @@ body{
     const email = document.querySelectorAll(".input-box")[0].value;
     const password = document.querySelectorAll(".input-box")[1].value;
 
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch("https://frontforge.onrender.com/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

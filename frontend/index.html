@@ -147,7 +147,7 @@ body{
     <input type="text" class="input-box" placeholder="Phone number, username, or email">
     <input type="password" class="input-box" placeholder="Password">
 
-    <button class="login-btn" onclick="redirectToPage()">Log in</button>
+    <button class="login-btn" onclick="login()">Log in</button>
 
     <div class="forgot">Forgot password?</div>
 
@@ -158,10 +158,27 @@ body{
 </div>
 
 <script>
-    function redirectToPage() {
-        // Change 'dashboard.html' to the name of your next page
+    async function login() {
+    const email = document.querySelectorAll(".input-box")[0].value;
+    const password = document.querySelectorAll(".input-box")[1].value;
+
+    const res = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+        localStorage.setItem("token", data.token);
         window.location.href = "index_main.html";
+    } else {
+        alert("Login failed");
     }
+}
 </script>
 
 </body>

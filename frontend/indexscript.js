@@ -1,3 +1,4 @@
+let currentChatId = null;
 let generatedCode = {
     html: "",
     css: "",
@@ -7,24 +8,72 @@ let generatedCode = {
 let currentTab = "html";
 
 // --- 1. MOCK DATA ---
-const historyData = {
-    "chat-v3": {
-        code: "// Version 3: Full History\nconst historyData = { ... };",
-        msgs: [{ role: "user", text: "Show me the history." }, { role: "bot", text: "Here is the history view (v3)." }]
-    },
-    "chat-v2": {
-        code: "/* Version 2: Theme Toggle */\nbody.light-theme { ... }",
-        msgs: [{ role: "user", text: "I need a light mode." }, { role: "bot", text: "I've added the theme toggle button." }]
-    },
-    "chat-v1": {
-        code: "\n<div class='container'>...</div>",
-        msgs: [{ role: "user", text: "Build the layout." }, { role: "bot", text: "Here is the basic Flexbox layout." }]
-    },
-    "chat-react": {
-        code: "const App = () => <div>Hello React</div>;",
-        msgs: [{ role: "user", text: "React component help?" }, { role: "bot", text: "Here is a functional component." }]
-    }
-};
+// const historyData = {
+//     "chat-v3": {
+//         code: "// Version 3: Full History\nconst historyData = { ... };",
+//         msgs: [{ role: "user", text: "Show me the history." }, { role: "bot", text: "Here is the history view (v3)." }]
+//     },
+//     "chat-v2": {
+//         code: "/* Version 2: Theme Toggle */\nbody.light-theme { ... }",
+//         msgs: [{ role: "user", text: "I need a light mode." }, { role: "bot", text: "I've added the theme toggle button." }]
+//     },
+//     "chat-v1": {
+//         code: "\n<div class='container'>...</div>",
+//         msgs: [{ role: "user", text: "Build the layout." }, { role: "bot", text: "Here is the basic Flexbox layout." }]
+//     },
+//     "chat-react": {
+//         code: "const App = () => <div>Hello React</div>;",
+//         msgs: [{ role: "user", text: "React component help?" }, { role: "bot", text: "Here is a functional component." }]
+//     }
+// };
+
+async function loadSidebar() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:5000/history", {
+        headers: {
+            "Authorization": token
+        }
+    });
+
+    const data = await res.json();
+
+    const sidebar = document.querySelector(".menu-group");
+
+    // reset sidebar
+    sidebar.innerHTML = `
+        <div style="margin-bottom: 20px; font-weight: bold; padding-left: 10px;">Recent</div>
+        <div class="menu-item active" id="btn-new-chat">+ New Chat</div>
+    `;
+
+    // ✅ New Chat button (ONLY ONCE)
+    document.getElementById("btn-new-chat").onclick = () => {
+        currentChatId = null;
+        messageList.innerHTML = "";
+    };
+
+    // ✅ Add chats
+    data.slice(0, 5).forEach((chat) => {
+        const item = document.createElement("div");
+        item.classList.add("menu-item");
+
+        // FIX: use title instead of prompt
+        item.innerText = chat.title || "New Chat";
+
+        item.onclick = () => {
+            currentChatId = chat._id;
+
+            messageList.innerHTML = "";
+
+            chat.messages.forEach(msg => {
+                appendMessage(msg.role, msg.text);
+            });
+        };
+
+        // FIX: append OUTSIDE click
+        sidebar.appendChild(item);
+    });
+}
 
 // --- 2. ELEMENTS ---
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -69,8 +118,8 @@ async function handleSend() {
     const text = inputField.value.trim();
     const apiKey = apiInput.value.trim();
     if (text === "") return;
-    if(apiKey===""){
-        appendMessage('bot',"please enter your api key. ")
+    if (apiKey === "") {
+        appendMessage('bot', "please enter your api key. ")
         return;
     }
 
@@ -83,15 +132,25 @@ async function handleSend() {
     codeContent.innerText = "// Generating...";
 
     try {
-        const response = await fetch("https://frontforge.onrender.com/generate", {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("Please login first");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const response = await fetch("http://localhost:5000/generate", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": token
             },
-            body: JSON.stringify({ prompt: text,apiKey: apiKey })
+            body: JSON.stringify({ prompt: text, apiKey: apiKey, chatId: currentChatId })
         });
 
         const data = await response.json();
+        currentChatId = data.chatId;
 
         if (!data.content) {
             throw new Error("No content returned");
@@ -179,3 +238,28 @@ function switchTab(tab) {
 
     codeContent.innerText = generatedCode[tab];
 }
+
+//adding real history
+async function loadHistory() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:5000/history", {
+        headers: {
+            "Authorization": token
+        }
+    });
+
+    const data = await res.json();
+
+    messageList.innerHTML = "";
+
+    data.forEach(chat => {
+        appendMessage('user', chat.prompt);
+        appendMessage('bot', chat.response);
+    });
+}
+
+window.onload = () => {
+    loadHistory();
+    loadSidebar();
+};

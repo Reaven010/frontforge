@@ -30,7 +30,7 @@ let currentTab = "html";
 async function loadSidebar() {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/history", {
+    const res = await fetch("https://frontforge.onrender.com/history", {
         headers: {
             "Authorization": token
         }
@@ -140,7 +140,7 @@ async function handleSend() {
             return;
         }
 
-        const response = await fetch("http://localhost:5000/generate", {
+        const response = await fetch("https://frontforge.onrender.com/generate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -243,7 +243,7 @@ function switchTab(tab) {
 async function loadHistory() {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/history", {
+    const res = await fetch("https://frontforge.onrender.com/history", {
         headers: {
             "Authorization": token
         }

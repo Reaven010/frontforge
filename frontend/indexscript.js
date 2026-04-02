@@ -4,6 +4,19 @@ let generatedCode = {
     css: "",
     js: ""
 };
+function getUserFromToken() {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload;
+}
+
+const user = getUserFromToken();
+
+if (user && user.name) {
+    document.getElementById("welcomeText").innerText = `Hello, ${user.name}`;
+}
 
 let currentTab = "html";
 

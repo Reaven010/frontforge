@@ -17,32 +17,41 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// make sure this exists ABOVE routes
+app.use(express.json());
+
 app.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // check if user already exists
+    // validation
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
+
+    // check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
 
     // hash password
-    const hashed = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // create user
-    const user = new User({
+    const user = await User.create({
       email,
-      password: hashed
+      password: hashedPassword
     });
 
-    await user.save();
-
-    res.json({ message: "User created successfully" });
+    res.status(201).json({
+      message: "Signup successful",
+      userId: user._id
+    });
 
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Signup error:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 

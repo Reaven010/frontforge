@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Sign Up</h1>
+            <p class="text-gray-500 mt-2">Join us today! It only takes a minute.</p>
+        </div>
+
+        <form id="signupForm" class="space-y-5">
+            <!-- Full Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input type="text" name="name" required
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                        placeholder="John Doe">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input type="email" name="email" required
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                        placeholder="name@example.com">
+                </div>
+            </div>
+
+            <!-- Gender -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-venus-mars"></i>
+                    </span>
+                    <select name="gender" required
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition appearance-none">
+                        <option value="" disabled selected>Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="non-binary">Non-binary</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" name="password" id="password" required
+                        class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                        placeholder="••••••••">
+                    <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-indigo-500">
+                        <i class="fas fa-eye" id="eye-icon"></i>
+                    </button>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Must be at least 8 characters long.</p>
+            </div>
+
+            <!-- Terms -->
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="terms" type="checkbox" required
+                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300">
+                </div>
+                <label for="terms" class="ml-2 text-sm text-gray-500">I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms and Conditions</a></label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg transition duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="mt-6 text-center text-sm text-gray-600">
+            Already have an account? 
+            <a href="#" class="text-indigo-600 font-semibold hover:underline">Log in</a>
+        </div>
+    </div>
+    <script src="signinscript.js"></script>
+
+</body>
+</html>

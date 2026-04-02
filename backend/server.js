@@ -22,11 +22,11 @@ app.use(express.json());
 
 app.post("/signup", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name,email, password } = req.body;
 
     // validation
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password required" });
+    if (!email || !password ||!name) {
+      return res.status(400).json({ error: "all fields are required" });
     }
 
     // check existing user
@@ -40,6 +40,7 @@ app.post("/signup", async (req, res) => {
 
     // create user
     const user = await User.create({
+      name,
       email,
       password: hashedPassword
     });
@@ -70,8 +71,9 @@ app.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET
+      { id: user._id,name:user.name },
+      process.env.JWT_SECRET,
+      {expiresIn:"7d"}
     );
 
     res.json({ token });

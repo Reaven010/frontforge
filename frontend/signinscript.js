@@ -19,6 +19,7 @@ const form = document.getElementById("signupForm");
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const name = document.querySelector("input[name='name']").value;
     const email = document.querySelector("input[name='email']").value;
     const password = document.querySelector("input[name='password']").value;
 
@@ -28,7 +29,7 @@ form.addEventListener("submit", async (e) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ name,email, password })
         });
 
         const data = await res.json();

@@ -5,21 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Your Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="signupscript.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
-
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Sign Up</h1>
+<body class="flex items-center justify-end min-h-screen px-20">
+    <div class="overlay"></div>
+    <video autoplay muted loop playsinline class="bg-video">
+    <source src="video.mp4" type="video/mp4">
+</video>
+<div class="relative z-10 bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white">Sign Up</h1>
             <p class="text-gray-500 mt-2">Join us today! It only takes a minute.</p>
         </div>
 
         <form id="signupForm" class="space-y-5">
             <!-- Full Name -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <label class="block text-sm font-medium text-white mb-1">Full Name</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user"></i>
@@ -32,7 +34,7 @@
 
             <!-- Email -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <label class="block text-sm font-medium text-white mb-1">Email Address</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-envelope"></i>
@@ -45,7 +47,7 @@
 
             <!-- Gender -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <label class="block text-sm font-medium text-white mb-1">Gender</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-venus-mars"></i>
@@ -64,7 +66,7 @@
 
             <!-- Password -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <label class="block text-sm font-medium text-white mb-1">Password</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-lock"></i>
@@ -76,7 +78,7 @@
                         <i class="fas fa-eye" id="eye-icon"></i>
                     </button>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">Must be at least 8 characters long.</p>
+                <p class="text-xs text-gray-200 mt-1">Must be at least 8 characters long.</p>
             </div>
 
             <!-- Terms -->
@@ -96,7 +98,7 @@
         </form>
 
         <!-- Footer -->
-        <div class="mt-6 text-center text-sm text-gray-600">
+        <div class="mt-6 text-center text-sm text-gray-200">
             Already have an account? 
             <a href="#" class="text-indigo-600 font-semibold hover:underline">Log in</a>
         </div>
